@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Реєстрація / Галерея / Соцмережі</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #330000;
+      color: red;
+      padding: 20px;
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+    /* --- Profile Display Styles --- */
+    #profileDisplay {
+      position: absolute;
+      top: 20px;
+      right: 20px; /* Changed to right */
+      background-color: rgba(0, 0, 0, 0.7);
+      border: 1px solid red;
+      padding: 10px 15px;
+      border-radius: 8px;
+      color: yellow;
+      display: none; /* Hidden by default */
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+      cursor: pointer; /* Make it clickable */
+      transition: background-color 0.3s;
+    }
+
+    #profileDisplay:hover {
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    #profileAvatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #555; /* Placeholder background */
+      border: 2px solid yellow;
+      object-fit: cover; /* Ensures image covers the area */
+    }
+
+    #profileUsername {
+      font-weight: bold;
+      color: yellow;
+      font-size: 1.1em;
+    }
+
+    /* --- Profile Editor Modal Styles --- */
+    #profileEditorModal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 200; /* Higher than other modals */
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #profileEditorModal .modal-content {
+      background-color: #1a1a1a; /* Slightly darker */
+      padding: 30px;
+      border: 2px solid red;
+      width: 350px;
+      text-align: center;
+      color: yellow;
+      font-weight: bold;
+      position: relative;
+      margin: auto;
+      border-radius: 10px;
+    }
+
+    #profileEditorModal .modal-content h2 {
+      margin-bottom: 25px;
+      color: red;
+    }
+
+    #profileEditorModal label {
+        display: block;
+        text-align: left;
+        margin-bottom: 8px;
+        color: yellow;
+        font-weight: normal;
+    }
+
+    #profileEditorModal input[type="text"],
+    #profileEditorModal input[type="password"] {
+        width: calc(100% - 16px); /* Adjust for padding */
+        padding: 8px;
+        margin-bottom: 15px;
+        background-color: black;
+        color: red;
+        border: 1px solid #444;
+        font-weight: bold;
+    }
+
+    #profileEditorModal .profile-editor-avatar-wrapper {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #555;
+        border: 3px solid yellow;
+        margin: 0 auto 20px;
+        cursor: pointer;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #profileEditorModal .profile-editor-avatar-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    #profileEditorModal .profile-editor-avatar-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.8em;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    #profileEditorModal .profile-editor-avatar-wrapper:hover .profile-editor-avatar-overlay {
+        opacity: 1;
+    }
+
+    #profileEditorModal input[type="file"] {
+        display: none; /* Hide default file input */
+    }
+
+    #profileEditorModal button.save-btn {
+      background-color: red;
+      color: yellow;
+      border: none;
+      padding: 12px 25px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      text-decoration: none;
+      display: block;
+      transition: background-color 0.3s;
+    }
+
+    #profileEditorModal button.save-btn:hover {
+      background-color: yellow;
+      color: red;
+    }
+
+
+    /* --- Existing Styles --- */
+    .tabs-container {
+      display: flex;
+      justify-content: space-between;
+      max-width: 400px;
+      margin: 30px auto 10px;
+    }
+
+    .tab-btn {
+      width: 48%;
+      cursor: pointer;
+      padding: 10px 0;
+      border: none;
+      background: #444;
+      color: yellow;
+      font-weight: bold;
+      transition: background 0.4s;
+      user-select: none;
+    }
+
+    .tab-btn.active {
+      background-color: red;
+      color: yellow;
+    }
+
+    .tab-btn:hover:not(.active) {
+      background-color: #555;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: red;
+    }
+
+    input[type="text"], input[type="password"], input[type="date"] {
+      background-color: black;
+      color: red;
+      border: 1px solid #444;
+      font-weight: bold;
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    ::placeholder {
+      color: #cc6666;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    form button[type="submit"] {
+      background-color: red;
+      color: yellow;
+      border: none;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+      outline: none;
+      width: 100%;
+    }
+
+    form button[type="submit"]:hover {
+      background-color: yellow;
+      color: red;
+    }
+
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .password-wrapper input {
+      padding-right: 40px; /* Make space for the eye icon inside the input */
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px; /* Position from the right edge of the wrapper */
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: gray;
+      font-size: 24px; /* Збільшений розмір ока */
+      font-weight: bold; /* Зробимо око жирнішим */
+      user-select: none;
+      padding: 0;
+      outline: none;
+      line-height: 1;
+      display: inline-block;
+      z-index: 2; /* Ensure eye is above input content */
+    }
+
+    .toggle-password:hover {
+      color: lightgray;
+    }
+
+    /* Styles for the diagonal line when password is visible */
+    .toggle-password.visible-password::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120%; /* Make it slightly wider than the eye icon */
+      height: 3px; /* Зробимо лінію жирнішою */
+      background-color: black; /* Змінюємо колір лінії на чорний */
+      transform: translate(-50%, -50%) rotate(45deg); /* Center and rotate for diagonal */
+      transform-origin: center center; /* Ensure rotation from center */
+    }
+
+    #buttonsSection {
+      display: none;
+      margin-top: 30px;
+      text-align: center;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #buttonsSection h1 {
+      color: yellow;
+      margin-bottom: 20px;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-row button,
+    .btn-row a {
+      background-color: red;
+      color: yellow;
+      border: none;
+      padding: 15px 30px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 18px;
+      flex: none;
+      transition: 0.5s;
+      animation: pulse 2s infinite;
+      min-width: 200px;
+      text-decoration: none;
+      display: inline-block;
+      line-height: normal;
+      text-align: center;
+    }
+
+    .btn-row button:hover,
+    .btn-row a:hover {
+      background-color: yellow;
+      color: red;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,0,0.7); }
+      50% { transform: scale(1.05); box-shadow: 0 0 15px 10px rgba(255,255,0,0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,0,0); }
+    }
+
+    .pulse {
+      animation: pulse 0.6s ease;
+    }
+
+    /* Shake animation for password field */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    .shake-animation {
+      animation: shake 0.3s ease-in-out;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #111;
+      padding: 20px;
+      border: 2px solid red;
+      width: 300px;
+      text-align: center;
+      color: yellow;
+      font-weight: bold;
+      position: relative;
+      margin: auto;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 20px;
+      color: red;
+    }
+
+    .modal-content button, .modal-content a {
+      background-color: red;
+      color: yellow;
+      border: none;
+      padding: 12px 25px;
+      margin: 10px 0;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      text-decoration: none;
+      display: block;
+      transition: background-color 0.3s;
+    }
+
+    .modal-content button:hover, .modal-content a:hover {
+      background-color: yellow;
+      color: red;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      font-size: 24px;
+      font-weight: bold;
+      color: yellow;
+      cursor: pointer;
+      background: none;
+      border: none;
+      outline: none;
+    }
+
+    .close-btn:hover {
+      color: red;
+    }
+
+    .footer-note {
+      position: fixed;
+      right: 10px;
+      bottom: 10px;
+      font-size: 14px;
+      color: yellow;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 6px 12px;
+      border: 1px solid red;
+      border-radius: 8px;
+      z-index: 999;
+    }
+
+    .footer-note a {
+      color: red;
+      text-decoration: none;
+    }
+
+    .footer-note a:hover {
+      color: yellow;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="profileDisplay">
+    <img id="profileAvatar" src="https://via.placeholder.com/50/FFD700/000000?text=👤" alt="User Avatar">
+    <span id="profileUsername"></span>
+  </div>
+
+  <div id="profileEditorModal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeProfileEditorModal()">&times;</button>
+      <h2>Редагування профілю</h2>
+
+      <div class="profile-editor-avatar-wrapper" onclick="document.getElementById('editAvatarInput').click()">
+          <img id="editProfileAvatarPreview" src="https://via.placeholder.com/100/FFD700/000000?text=👤" alt="Аватар">
+          <div class="profile-editor-avatar-overlay">Змінити фото</div>
+      </div>
+      <input type="file" id="editAvatarInput" accept="image/*">
+
+      <label for="editLogin">Логін:</label>
+      <input type="text" id="editLogin" required>
+
+      <label for="editPassword">Новий пароль (залиште порожнім, якщо не міняєте):</label>
+      <input type="password" id="editPassword">
+
+      <button class="save-btn" onclick="saveProfileChanges()">Зберегти зміни</button>
+    </div>
+  </div>
+
+
+  <div class="tabs-container">
+    <button id="loginTab" class="tab-btn">Вхід</button>
+    <button id="registerTab" class="tab-btn active">Реєстрація</button>
+  </div>
+
+  <form id="registerForm">
+    <h2>Реєстрація</h2>
+    <label>Новий логін:
+      <input type="text" id="regLogin" required placeholder="Введіть логін" />
+    </label>
+    <label class="password-label">Новий пароль:
+      <div class="password-wrapper">
+        <input type="password" id="regPassword" required placeholder="Введіть пароль" />
+        <button type="button" class="toggle-password">👁️</button>
+      </div>
+    </label>
+    <label class="dob-label">Дата народження:
+      <input type="date" id="regDob" required />
+    </label>
+    <button type="submit" id="registerBtn">Зареєструватись</button>
+  </form>
+
+  <form id="loginForm" class="hidden">
+    <h2>Вхід</h2>
+    <label>Логін:
+      <input type="text" id="loginLogin" required placeholder="Введіть логін" />
+    </label>
+    <label>Пароль:
+      <div class="password-wrapper">
+        <input type="password" id="loginPassword" required placeholder="Введіть пароль" />
+        <button type="button" class="toggle-password">👁️</button>
+      </div>
+    </label>
+    <button type="submit" id="loginBtn">Увійти</button>
+  </form>
+
+  <div id="buttonsSection">
+    <h1>Вітаю тебе на сайті сім'ї KATO famq</h1>
+    <div class="btn-row">
+      <button id="socialBtn">Соц мережі</button>
+      <button id="logoutBtn">Вийти</button>
+    </div>
+  </div>
+
+  <div id="socialModal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+      <h2>Обери платформу</h2>
+      <button onclick="showTiktok()">TikTok</button>
+      <button onclick="showTwitch()">Twitch</button>
+    </div>
+  </div>
+
+  <div id="tiktokModal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeAllModals()">&times;</button>
+      <h2>TikTok Профілі</h2>
+      <button onclick="window.open('https://www.tiktok.com/@_arturio_kato_', '_blank')">TikTok Артура</button>
+      <button onclick="window.open('https://www.tiktok.com/@_miya_kato', '_blank')">TikTok Мії</button>
+    </div>
+  </div>
+
+  <div id="twitchModal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeAllModals()">&times;</button>
+      <h2>Twitch Профілі</h2>
+      <a href="https://www.twitch.tv/tokarrr27" target="_blank" rel="noopener noreferrer">Максім (tokarrr27)</a>
+      <a href="https://www.twitch.tv/miya_kato" target="_blank" rel="noopener noreferrer">Мія (miya_kato)</a>
+      <a href="https://www.twitch.tv/maloletkagta5" target="_blank" rel="noopener noreferrer">Глеб (maloletkagta5)</a>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Створено від Артура — <a href="email:sartgameover@gmail.com">sartgameover@gmail.com</a>
+  </div>
+
+  <script>
+    const registerTabBtn = document.getElementById("registerTab");
+    const loginTabBtn = document.getElementById("loginTab");
+    const registerForm = document.getElementById("registerForm");
+    const loginForm = document.getElementById("loginForm");
+    const buttonsSection = document.getElementById("buttonsSection");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginPasswordInput = document.getElementById("loginPassword");
+    const regDobLabel = document.querySelector("#registerForm .dob-label");
+    const registerSubmitBtn = document.getElementById("registerBtn");
+
+    // Profile display elements
+    const profileDisplay = document.getElementById("profileDisplay");
+    const profileUsernameSpan = document.getElementById("profileUsername"); // Changed to Span
+    const profileAvatarImg = document.getElementById("profileAvatar"); // Changed to Img
+
+    // Profile editor elements
+    const profileEditorModal = document.getElementById("profileEditorModal");
+    const editLoginInput = document.getElementById("editLogin");
+    const editPasswordInput = document.getElementById("editPassword");
+    const editAvatarInput = document.getElementById("editAvatarInput");
+    const editProfileAvatarPreview = document.getElementById("editProfileAvatarPreview");
+
+    let currentLoggedInUser = null; // Store the current logged-in username
+
+    // Function to show the login/register forms and hide the content
+    function showAuthForms() {
+        registerForm.style.display = "block";
+        loginForm.style.display = "none"; // Default to register form
+        registerTabBtn.style.display = "block";
+        loginTabBtn.style.display = "block";
+        buttonsSection.style.display = "none";
+        registerTabBtn.classList.add("active");
+        loginTabBtn.classList.remove("active");
+        regDobLabel.style.display = 'block'; // Ensure DOB is visible when showing register
+        registerSubmitBtn.textContent = 'Зареєструватись'; // Reset button text
+        profileDisplay.style.display = 'none'; // Hide profile display
+        currentLoggedInUser = null; // Clear current user
+    }
+
+    // Function to show the main content and hide forms/tabs
+    function showButtonsSection(username) {
+        registerForm.style.display = "none";
+        loginForm.style.display = "none";
+        buttonsSection.style.display = "block";
+        registerTabBtn.style.display = "none";
+        loginTabBtn.style.display = "none";
+
+        // Show and update profile display
+        if (username) {
+            currentLoggedInUser = username; // Set current user
+            profileUsernameSpan.textContent = username;
+            const users = getUsers();
+            const userData = users[username];
+            if (userData && userData.avatar) {
+                profileAvatarImg.src = userData.avatar;
+            } else {
+                profileAvatarImg.src = "https://via.placeholder.com/50/FFD700/000000?text=👤"; // Default avatar
+            }
+            profileDisplay.style.display = 'flex'; // Use flex to align avatar and text
+        } else {
+            profileDisplay.style.display = 'none';
+        }
+    }
+
+    // Check if user is already logged in on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (loggedInUser) {
+            showButtonsSection(loggedInUser);
+        } else {
+            showAuthForms();
+        }
+    });
+
+    registerTabBtn.onclick = () => {
+      registerForm.classList.remove("hidden");
+      loginForm.classList.add("hidden");
+      registerTabBtn.classList.add("active");
+      loginTabBtn.classList.remove("active");
+      regDobLabel.style.display = 'block'; // Show DOB when register tab is active
+      registerSubmitBtn.textContent = 'Зареєструватись'; // Change button text to Register
+      profileDisplay.style.display = 'none'; // Hide profile display
+    };
+
+    loginTabBtn.onclick = () => {
+      loginForm.classList.remove("hidden");
+      registerForm.classList.add("hidden");
+      loginTabBtn.classList.add("active");
+      registerTabBtn.classList.remove("active");
+      regDobLabel.style.display = 'none'; // Hide DOB when login tab is active
+      registerSubmitBtn.textContent = 'Увійти'; // Change button text to Login
+      profileDisplay.style.display = 'none'; // Hide profile display
+    };
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem("users") || "{}");
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    registerForm.onsubmit = function(e) {
+      e.preventDefault();
+      const login = document.getElementById("regLogin").value.trim();
+      const password = document.getElementById("regPassword").value;
+      const dob = document.getElementById("regDob").value;
+      const users = getUsers();
+
+      if (users[login]) {
+          alert("Такий логін вже існує");
+          return;
+      }
+      users[login] = { password, dob, avatar: "https://via.placeholder.com/50/FFD700/000000?text=👤" }; // Add default avatar
+      saveUsers(users);
+      alert("Реєстрація пройшла успішно!");
+      registerForm.reset();
+      localStorage.setItem('loggedInUser', login); // Store logged in username
+      showButtonsSection(login); // Show profile with new username
+    };
+
+    loginForm.onsubmit = function(e) {
+      e.preventDefault();
+      const login = document.getElementById("loginLogin").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const users = getUsers();
+
+      if (!users[login]) {
+          alert("Користувача не знайдено");
+          return;
+      }
+      if (users[login].password !== password) {
+          alert("Невірний пароль");
+          // Add shake animation
+          loginPasswordInput.classList.add('shake-animation');
+          // Remove animation class after it finishes
+          loginPasswordInput.addEventListener('animationend', () => {
+              loginPasswordInput.classList.remove('shake-animation');
+          }, { once: true }); // Ensure the event listener is removed after one use
+          return;
+      }
+
+      alert(`Вхід виконано! Дата народження: ${users[login].dob}`);
+      loginForm.reset();
+      localStorage.setItem('loggedInUser', login); // Store logged in username
+      showButtonsSection(login); // Show profile with logged in username
+    };
+
+    // Logout functionality
+    logoutBtn.onclick = () => {
+        localStorage.removeItem('loggedInUser'); // Clear logged in username
+        alert("Ви успішно вийшли з системи.");
+        showAuthForms(); // Show the login/register forms again
+    };
+
+
+    document.querySelectorAll('.toggle-password').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = button.previousElementSibling;
+        input.type = input.type === "password" ? "text" : "password";
+        // Toggle 'visible-password' class to apply/remove the custom diagonal line
+        button.classList.toggle('visible-password', input.type === "text");
+      });
+    });
+
+    function pulseButton(button) {
+      button.classList.add('pulse');
+      setTimeout(() => button.classList.remove('pulse'), 600);
+    }
+
+    const socialBtn = document.getElementById('socialBtn');
+    const socialModal = document.getElementById('socialModal');
+    const tiktokModal = document.getElementById('tiktokModal');
+    const twitchModal = document.getElementById('twitchModal');
+
+    socialBtn.onclick = () => {
+      pulseButton(socialBtn);
+      socialModal.style.display = "flex";
+    };
+
+    function showTiktok() {
+      closeAllModals();
+      tiktokModal.style.display = "flex";
+    }
+
+    function showTwitch() {
+      closeAllModals();
+      twitchModal.style.display = "flex";
+    }
+
+    function closeAllModals() {
+      socialModal.style.display = "none";
+      tiktokModal.style.display = "none";
+      twitchModal.style.display = "none";
+    }
+
+    window.onclick = (event) => {
+      if ([socialModal, tiktokModal, twitchModal].includes(event.target)) {
+        closeAllModals();
+        // Close profile editor modal if open
+        if (profileEditorModal.style.display === 'flex' && event.target === profileEditorModal) {
+          closeProfileEditorModal();
+        }
+      }
+    };
+
+    function closeModal() {
+      socialModal.style.display = "none";
+    }
+
+    // --- Profile Editor Functions ---
+
+    // Open profile editor
+    profileDisplay.addEventListener('click', openProfileEditorModal);
+
+    function openProfileEditorModal() {
+        if (!currentLoggedInUser) {
+            alert("Будь ласка, увійдіть або зареєструйтесь, щоб редагувати профіль.");
+            return;
+        }
+        const users = getUsers();
+        const userData = users[currentLoggedInUser];
+
+        if (userData) {
+            editLoginInput.value = currentLoggedInUser; // Current login
+            editPasswordInput.value = ''; // Clear password field for security
+            editProfileAvatarPreview.src = userData.avatar || "https://via.placeholder.com/100/FFD700/000000?text=👤";
+            profileEditorModal.style.display = 'flex';
+        } else {
+            alert("Сталася помилка. Дані користувача не знайдено.");
+        }
+    }
+
+    function closeProfileEditorModal() {
+        profileEditorModal.style.display = 'none';
+    }
+
+    // Handle avatar image selection
+    editAvatarInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                editProfileAvatarPreview.src = e.target.result; // Set preview
+            };
+            reader.readAsDataURL(file); // Read file as Data URL
+        }
+    });
+
+    // Save profile changes
+    function saveProfileChanges() {
+        if (!currentLoggedInUser) {
+            alert("Немає активного користувача для збереження змін.");
+            return;
+        }
+
+        const newLogin = editLoginInput.value.trim();
+        const newPassword = editPasswordInput.value;
+        const newAvatar = editProfileAvatarPreview.src; // Get Data URL from preview
+
+        const users = getUsers();
+        const oldUserData = users[currentLoggedInUser];
+
+        if (!oldUserData) {
+            alert("Сталася помилка. Дані старого користувача не знайдено.");
+            return;
+        }
+
+        // Validate new login (if changed)
+        if (newLogin !== currentLoggedInUser && users[newLogin]) {
+            alert("Новий логін вже зайнятий! Будь ласка, оберіть інший.");
+            return;
+        }
+
+        // If login changed, delete old user entry
+        if (newLogin !== currentLoggedInUser) {
+            delete users[currentLoggedInUser];
+            localStorage.removeItem('loggedInUser'); // Remove old loggedInUser
+        }
+
+        // Update user data (or create new entry if login changed)
+        users[newLogin] = {
+            dob: oldUserData.dob, // Keep existing DOB
+            password: newPassword ? newPassword : oldUserData.password, // Update password if provided
+            avatar: newAvatar // Save new avatar Data URL
+        };
+
+        saveUsers(users);
+        localStorage.setItem('loggedInUser', newLogin); // Set new loggedInUser
+        currentLoggedInUser = newLogin; // Update current user in JS
+
+        alert("Зміни профілю успішно збережено!");
+        closeProfileEditorModal();
+        showButtonsSection(currentLoggedInUser); // Refresh profile display
+    }
+
+  </script>
+</body>
+</html>
