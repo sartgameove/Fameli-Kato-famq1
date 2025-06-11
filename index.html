@@ -4,30 +4,42 @@
   <meta charset="UTF-8" />
   <title>Реєстрація / Галерея / Соцмережі</title>
   <style>
+    /* CSS Variables for dynamic styling */
+    :root {
+      --main-bg-color: #333333; /* Default dark grey background */
+      --text-color: yellow; /* This will be our primary text color, dynamic now */
+      --accent-color: red; /* Main accent color (e.g., for borders, special elements) */
+      --secondary-accent-color: yellow; /* Secondary accent color (e.g., for user info text) */
+      --button-bg-color: var(--accent-color); /* Default button background will be red */
+      --button-text-color: var(--secondary-accent-color); /* Default button text will be yellow */
+      --button-hover-bg-color: var(--secondary-accent-color); /* Default button hover bg will be yellow */
+      --button-hover-text-color: var(--accent-color); /* Default button hover text will be red */
+    }
+
     body {
       font-family: Arial, sans-serif;
-      background: #330000;
-      color: red;
+      background: var(--main-bg-color); /* Uses the main background color variable */
+      color: var(--text-color); /* ALL text color set to this variable */
       padding: 20px;
       box-sizing: border-box;
       margin: 0;
     }
 
-    /* --- Profile Display Styles --- */
+    /* --- Profile Display Styles (Right Corner) --- */
     #profileDisplay {
       position: absolute;
       top: 20px;
-      right: 20px; /* Changed to right */
+      right: 20px;
       background-color: rgba(0, 0, 0, 0.7);
-      border: 1px solid red;
+      border: 1px solid var(--accent-color);
       padding: 10px 15px;
       border-radius: 8px;
-      color: yellow;
-      display: none; /* Hidden by default */
+      color: var(--secondary-accent-color); /* This specific element's text might remain secondary */
+      display: none;
       align-items: center;
       gap: 10px;
       z-index: 10;
-      cursor: pointer; /* Make it clickable */
+      cursor: pointer;
       transition: background-color 0.3s;
     }
 
@@ -39,134 +51,107 @@
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      background-color: #555; /* Placeholder background */
-      border: 2px solid yellow;
-      object-fit: cover; /* Ensures image covers the area */
+      background-color: #555;
+      border: 2px solid var(--secondary-accent-color);
+      object-fit: cover;
     }
 
     #profileUsername {
       font-weight: bold;
-      color: yellow;
+      color: var(--secondary-accent-color); /* This specific element's text might remain secondary */
       font-size: 1.1em;
     }
 
     /* --- Profile Editor Modal Styles --- */
     #profileEditorModal {
-      display: none; /* Hidden by default */
+      display: none;
       position: fixed;
-      z-index: 200; /* Higher than other modals */
-      left: 0; top: 0;
-      width: 100%; height: 100%;
+      z-index: 200;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.9);
+      background-color: rgba(0, 0, 0, 0.8);
       justify-content: center;
       align-items: center;
     }
 
-    #profileEditorModal .modal-content {
-      background-color: #1a1a1a; /* Slightly darker */
+    .profile-editor-content {
+      background-color: #111;
       padding: 30px;
-      border: 2px solid red;
-      width: 350px;
+      border: 2px solid var(--accent-color);
+      width: 400px;
       text-align: center;
-      color: yellow;
+      color: var(--text-color); /* Text inside modal */
       font-weight: bold;
       position: relative;
       margin: auto;
       border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); /* Hardcoded shadow color, can be made dynamic if needed */
     }
 
-    #profileEditorModal .modal-content h2 {
+    .profile-editor-content h2 {
       margin-bottom: 25px;
-      color: red;
+      color: var(--accent-color);
+      font-size: 1.8em;
     }
 
-    #profileEditorModal label {
-        display: block;
-        text-align: left;
-        margin-bottom: 8px;
-        color: yellow;
-        font-weight: normal;
-    }
-
-    #profileEditorModal input[type="text"],
-    #profileEditorModal input[type="password"] {
-        width: calc(100% - 16px); /* Adjust for padding */
-        padding: 8px;
-        margin-bottom: 15px;
-        background-color: black;
-        color: red;
-        border: 1px solid #444;
-        font-weight: bold;
-    }
-
-    #profileEditorModal .profile-editor-avatar-wrapper {
-        position: relative;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background-color: #555;
-        border: 3px solid yellow;
-        margin: 0 auto 20px;
-        cursor: pointer;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    #profileEditorModal .profile-editor-avatar-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    #profileEditorModal .profile-editor-avatar-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 0.8em;
-        text-align: center;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-
-    #profileEditorModal .profile-editor-avatar-wrapper:hover .profile-editor-avatar-overlay {
-        opacity: 1;
-    }
-
-    #profileEditorModal input[type="file"] {
-        display: none; /* Hide default file input */
-    }
-
-    #profileEditorModal button.save-btn {
-      background-color: red;
-      color: yellow;
-      border: none;
-      padding: 12px 25px;
-      margin-top: 20px;
-      cursor: pointer;
-      font-size: 16px;
-      width: 100%;
-      text-decoration: none;
+    .profile-editor-content label {
       display: block;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .profile-editor-content input[type="text"],
+    .profile-editor-content input[type="password"],
+    .profile-editor-content input[type="file"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-top: 5px;
+      background-color: black;
+      color: var(--text-color); /* Input text color */
+      border: 1px solid #444;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+
+    .profile-editor-content input[type="file"] {
+      padding: 5px;
+    }
+
+    #editAvatarPreview {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--secondary-accent-color);
+      margin: 15px auto 20px;
+      display: block;
+      background-color: #555;
+    }
+
+    .profile-editor-content button {
+      background-color: var(--button-bg-color); /* Uses CSS variable */
+      color: var(--button-text-color); /* Uses CSS variable */
+      border: none;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 12px;
+      cursor: pointer;
       transition: background-color 0.3s;
+      margin-top: 15px;
+      width: 100%;
+      outline: none;
+      border-radius: 5px;
     }
 
-    #profileEditorModal button.save-btn:hover {
-      background-color: yellow;
-      color: red;
+    .profile-editor-content button:hover {
+      background-color: var(--button-hover-bg-color); /* Uses CSS variable */
+      color: var(--button-hover-text-color); /* Uses CSS variable */
     }
 
-
-    /* --- Existing Styles --- */
+    /* --- Tab Buttons (Вхід/Реєстрація) --- */
     .tabs-container {
       display: flex;
       justify-content: space-between;
@@ -179,16 +164,16 @@
       cursor: pointer;
       padding: 10px 0;
       border: none;
-      background: #444;
-      color: yellow;
+      background: #444; /* Default background for inactive tab */
+      color: var(--secondary-accent-color); /* Inactive tab text color */
       font-weight: bold;
       transition: background 0.4s;
       user-select: none;
     }
 
     .tab-btn.active {
-      background-color: red;
-      color: yellow;
+      background-color: var(--button-bg-color); /* Active tab uses button color */
+      color: var(--button-text-color);
     }
 
     .tab-btn:hover:not(.active) {
@@ -198,17 +183,18 @@
     form {
       max-width: 400px;
       margin: 0 auto;
+      color: var(--text-color); /* Text inside form */
     }
 
     label {
       display: block;
       margin-bottom: 10px;
-      color: red;
+      color: var(--text-color); /* Label color */
     }
 
     input[type="text"], input[type="password"], input[type="date"] {
       background-color: black;
-      color: red;
+      color: var(--text-color); /* Input text color */
       border: 1px solid #444;
       font-weight: bold;
       padding: 8px;
@@ -216,17 +202,19 @@
       box-sizing: border-box;
     }
 
+    /* Placeholder color should also adapt for contrast */
     ::placeholder {
-      color: #cc6666;
+      color: var(--secondary-accent-color); /* Placeholder color should contrast with input background */
     }
 
     .hidden {
       display: none;
     }
 
+    /* --- Form Submit Buttons (Зареєструватись/Увійти) --- */
     form button[type="submit"] {
-      background-color: red;
-      color: yellow;
+      background-color: var(--button-bg-color); /* Uses CSS variable */
+      color: var(--button-text-color); /* Uses CSS variable */
       border: none;
       font-weight: bold;
       font-size: 16px;
@@ -239,8 +227,8 @@
     }
 
     form button[type="submit"]:hover {
-      background-color: yellow;
-      color: red;
+      background-color: var(--button-hover-bg-color); /* Uses CSS variable */
+      color: var(--button-hover-text-color); /* Uses CSS variable */
     }
 
     .password-wrapper {
@@ -249,43 +237,42 @@
     }
 
     .password-wrapper input {
-      padding-right: 40px; /* Make space for the eye icon inside the input */
+      padding-right: 40px;
     }
 
     .toggle-password {
       position: absolute;
       top: 50%;
-      right: 10px; /* Position from the right edge of the wrapper */
+      right: 10px;
       transform: translateY(-50%);
       background: none;
       border: none;
       cursor: pointer;
-      color: gray;
-      font-size: 24px; /* Збільшений розмір ока */
-      font-weight: bold; /* Зробимо око жирнішим */
+      color: var(--text-color); /* Toggle password icon color */
+      font-size: 24px;
+      font-weight: bold;
       user-select: none;
       padding: 0;
       outline: none;
       line-height: 1;
       display: inline-block;
-      z-index: 2; /* Ensure eye is above input content */
+      z-index: 2;
     }
 
     .toggle-password:hover {
-      color: lightgray;
+      color: var(--accent-color); /* Hover color */
     }
 
-    /* Styles for the diagonal line when password is visible */
     .toggle-password.visible-password::before {
       content: '';
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 120%; /* Make it slightly wider than the eye icon */
-      height: 3px; /* Зробимо лінію жирнішою */
-      background-color: black; /* Змінюємо колір лінії на чорний */
-      transform: translate(-50%, -50%) rotate(45deg); /* Center and rotate for diagonal */
-      transform-origin: center center; /* Ensure rotation from center */
+      width: 120%;
+      height: 4px;
+      background-color: black; /* This line can also be made dynamic if needed */
+      transform: translate(-50%, -50%) rotate(45deg);
+      transform-origin: center center;
     }
 
     #buttonsSection {
@@ -295,10 +282,11 @@
       max-width: 400px;
       margin-left: auto;
       margin-right: auto;
+      color: var(--text-color); /* Text in buttons section */
     }
 
     #buttonsSection h1 {
-      color: yellow;
+      color: var(--text-color); /* H1 in buttons section */
       margin-bottom: 20px;
     }
 
@@ -312,8 +300,8 @@
 
     .btn-row button,
     .btn-row a {
-      background-color: red;
-      color: yellow;
+      background-color: var(--button-bg-color); /* Uses CSS variable */
+      color: var(--button-text-color); /* Uses CSS variable */
       border: none;
       padding: 15px 30px;
       font-weight: bold;
@@ -331,8 +319,8 @@
 
     .btn-row button:hover,
     .btn-row a:hover {
-      background-color: yellow;
-      color: red;
+      background-color: var(--button-hover-bg-color); /* Uses CSS variable */
+      color: var(--button-hover-text-color); /* Uses CSS variable */
     }
 
     @keyframes pulse {
@@ -371,10 +359,10 @@
     .modal-content {
       background-color: #111;
       padding: 20px;
-      border: 2px solid red;
+      border: 2px solid var(--accent-color);
       width: 300px;
       text-align: center;
-      color: yellow;
+      color: var(--text-color); /* Text in modal content */
       font-weight: bold;
       position: relative;
       margin: auto;
@@ -382,12 +370,12 @@
 
     .modal-content h2 {
       margin-bottom: 20px;
-      color: red;
+      color: var(--accent-color);
     }
 
     .modal-content button, .modal-content a {
-      background-color: red;
-      color: yellow;
+      background-color: var(--button-bg-color); /* Uses CSS variable */
+      color: var(--button-text-color); /* Uses CSS variable */
       border: none;
       padding: 12px 25px;
       margin: 10px 0;
@@ -400,8 +388,8 @@
     }
 
     .modal-content button:hover, .modal-content a:hover {
-      background-color: yellow;
-      color: red;
+      background-color: var(--button-hover-bg-color); /* Uses CSS variable */
+      color: var(--button-hover-text-color); /* Uses CSS variable */
     }
 
     .close-btn {
@@ -410,7 +398,7 @@
       right: 10px;
       font-size: 24px;
       font-weight: bold;
-      color: yellow;
+      color: var(--secondary-accent-color); /* Close button color */
       cursor: pointer;
       background: none;
       border: none;
@@ -418,7 +406,7 @@
     }
 
     .close-btn:hover {
-      color: red;
+      color: var(--accent-color);
     }
 
     .footer-note {
@@ -426,22 +414,117 @@
       right: 10px;
       bottom: 10px;
       font-size: 14px;
-      color: yellow;
+      color: var(--secondary-accent-color); /* Footer note text color */
       background-color: rgba(0, 0, 0, 0.7);
       padding: 6px 12px;
-      border: 1px solid red;
+      border: 1px solid var(--accent-color);
       border-radius: 8px;
       z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .footer-note a {
-      color: red;
+      color: var(--accent-color);
       text-decoration: none;
     }
 
     .footer-note a:hover {
-      color: yellow;
+      color: var(--secondary-accent-color);
       text-decoration: underline;
+    }
+
+    /* --- Design Settings Modal Styles --- */
+    #designSettingsModal {
+      display: none;
+      position: fixed;
+      z-index: 150;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .design-settings-content {
+      background-color: #111;
+      padding: 30px;
+      border: 2px solid var(--accent-color);
+      width: 350px;
+      text-align: center;
+      color: var(--text-color); /* Text in design settings modal */
+      font-weight: bold;
+      position: relative;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); /* Can be made dynamic */
+    }
+
+    .design-settings-content h2 {
+      margin-bottom: 25px;
+      color: var(--accent-color);
+      font-size: 1.8em;
+    }
+
+    .design-settings-content label {
+      display: block;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .design-settings-content input[type="color"] {
+      width: 100%;
+      height: 50px;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      box-sizing: border-box;
+      border: 1px solid #444;
+    }
+
+    .design-settings-content button {
+      background-color: var(--button-bg-color); /* Uses CSS variable */
+      color: var(--button-text-color); /* Uses CSS variable */
+      border: none;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 15px;
+      width: 100%;
+      outline: none;
+      border-radius: 5px;
+    }
+
+    .design-settings-content button:hover {
+      background-color: var(--button-hover-bg-color); /* Uses CSS variable */
+      color: var(--button-hover-text-color); /* Uses CSS variable */
+    }
+
+    /* Style for the new design settings button in footer */
+    .footer-note #designSettingsBtnFooter {
+        background-color: var(--button-bg-color); /* Uses CSS variable */
+        color: var(--button-text-color); /* Uses CSS variable */
+        border: none;
+        padding: 8px 15px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 5px;
+        transition: background-color 0.3s, transform 0.2s;
+        white-space: nowrap;
+    }
+
+    .footer-note #designSettingsBtnFooter:hover {
+        background-color: var(--button-hover-bg-color); /* Uses CSS variable */
+        color: var(--button-hover-text-color); /* Uses CSS variable */
+        transform: scale(1.05);
     }
   </style>
 </head>
@@ -451,28 +534,6 @@
     <img id="profileAvatar" src="https://via.placeholder.com/50/FFD700/000000?text=👤" alt="User Avatar">
     <span id="profileUsername"></span>
   </div>
-
-  <div id="profileEditorModal" class="modal">
-    <div class="modal-content">
-      <button class="close-btn" onclick="closeProfileEditorModal()">&times;</button>
-      <h2>Редагування профілю</h2>
-
-      <div class="profile-editor-avatar-wrapper" onclick="document.getElementById('editAvatarInput').click()">
-          <img id="editProfileAvatarPreview" src="https://via.placeholder.com/100/FFD700/000000?text=👤" alt="Аватар">
-          <div class="profile-editor-avatar-overlay">Змінити фото</div>
-      </div>
-      <input type="file" id="editAvatarInput" accept="image/*">
-
-      <label for="editLogin">Логін:</label>
-      <input type="text" id="editLogin" required>
-
-      <label for="editPassword">Новий пароль (залиште порожнім, якщо не міняєте):</label>
-      <input type="password" id="editPassword">
-
-      <button class="save-btn" onclick="saveProfileChanges()">Зберегти зміни</button>
-    </div>
-  </div>
-
 
   <div class="tabs-container">
     <button id="loginTab" class="tab-btn">Вхід</button>
@@ -518,6 +579,39 @@
     </div>
   </div>
 
+  <div id="profileEditorModal" class="modal">
+    <div class="profile-editor-content">
+      <button class="close-btn" onclick="closeProfileEditorModal()">&times;</button>
+      <h2>Редагувати профіль</h2>
+      <img id="editAvatarPreview" src="https://via.placeholder.com/100/FFD700/000000?text=👤" alt="Avatar Preview">
+
+      <label>Змінити фото:
+        <input type="file" id="editAvatarInput" accept="image/*">
+      </label>
+
+      <label>Новий логін:
+        <input type="text" id="editLogin" />
+      </label>
+
+      <label>Змінити пароль (залиште порожнім, якщо не міняєте):
+        <input type="password" id="editPassword" placeholder="Введіть новий пароль" />
+      </label>
+
+      <button id="saveProfileBtn">Зберегти зміни</button>
+    </div>
+  </div>
+
+  <div id="designSettingsModal" class="modal">
+    <div class="design-settings-content">
+      <button class="close-btn" onclick="closeDesignSettingsModal()">&times;</button>
+      <h2>Налаштування дизайну</h2>
+      <label>Виберіть колір фону:
+        <input type="color" id="backgroundColorPicker" value="#333333">
+      </label>
+      <button id="saveDesignBtn">Зберегти колір</button>
+    </div>
+  </div>
+
   <div id="socialModal" class="modal">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">&times;</button>
@@ -548,6 +642,7 @@
 
   <div class="footer-note">
     Створено від Артура — <a href="email:sartgameover@gmail.com">sartgameover@gmail.com</a>
+    <button id="designSettingsBtnFooter">Налаштування дизайну</button>
   </div>
 
   <script>
@@ -563,60 +658,195 @@
 
     // Profile display elements
     const profileDisplay = document.getElementById("profileDisplay");
-    const profileUsernameSpan = document.getElementById("profileUsername"); // Changed to Span
-    const profileAvatarImg = document.getElementById("profileAvatar"); // Changed to Img
+    const profileUsernameSpan = document.getElementById("profileUsername");
+    const profileAvatarImg = document.getElementById("profileAvatar");
 
-    // Profile editor elements
+    // Profile Editor elements
     const profileEditorModal = document.getElementById("profileEditorModal");
+    const editAvatarPreview = document.getElementById("editAvatarPreview");
+    const editAvatarInput = document.getElementById("editAvatarInput");
     const editLoginInput = document.getElementById("editLogin");
     const editPasswordInput = document.getElementById("editPassword");
-    const editAvatarInput = document.getElementById("editAvatarInput");
-    const editProfileAvatarPreview = document.getElementById("editProfileAvatarPreview");
+    const saveProfileBtn = document.getElementById("saveProfileBtn");
 
-    let currentLoggedInUser = null; // Store the current logged-in username
+    // Design Settings elements
+    const designSettingsBtnFooter = document.getElementById("designSettingsBtnFooter");
+    const designSettingsModal = document.getElementById("designSettingsModal");
+    const backgroundColorPicker = document.getElementById("backgroundColorPicker");
+    const saveDesignBtn = document.getElementById("saveDesignBtn");
+    const bodyElement = document.body; // Reference to the body for background color
+    const root = document.documentElement; // Reference to the :root for CSS variables
 
-    // Function to show the login/register forms and hide the content
+    // --- Helper Functions for LocalStorage ---
+    function getUsers() {
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      for (const login in users) {
+        if (!users[login].avatar) {
+          users[login].avatar = "https://via.placeholder.com/50/FFD700/000000?text=👤";
+        }
+      }
+      return users;
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    function saveBackgroundColor(color) {
+        localStorage.setItem("siteBackgroundColor", color);
+    }
+
+    function getBackgroundColor() {
+        return localStorage.getItem("siteBackgroundColor") || "#333333"; // Default dark grey
+    }
+
+    // --- Function to update CSS variables based on chosen background color ---
+    function updateDynamicColors(newBgColor) {
+        root.style.setProperty('--main-bg-color', newBgColor);
+
+        // Calculate relative luminance (per WCAG) to determine light/dark background
+        const hex = newBgColor.replace('#', '');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+
+        // Threshold for determining light/dark background
+        const isLightBackground = luminance > 0.5;
+
+        // Main text color: Black for light backgrounds, Yellow for dark backgrounds
+        const textColor = isLightBackground ? '#000000' : 'yellow';
+        root.style.setProperty('--text-color', textColor);
+
+
+        // Accent colors for borders, headings, etc.
+        // For light backgrounds, use a dark accent (like black or a dark grey)
+        // For dark backgrounds, use red.
+        const accentColor = isLightBackground ? '#333333' : 'red'; // Dark grey or Red
+        root.style.setProperty('--accent-color', accentColor);
+
+
+        // Secondary accent color (for things like profile display text, placeholder text)
+        // For light backgrounds, maybe a slightly lighter grey than accent.
+        // For dark backgrounds, a contrasting color (yellow).
+        const secondaryAccentColor = isLightBackground ? '#666666' : 'yellow';
+        root.style.setProperty('--secondary-accent-color', secondaryAccentColor);
+
+
+        // Button colors will now be based on the main text color for their background
+        // and the main background color for their text, or vice-versa for hover state.
+        const buttonBgColor = isLightBackground ? '#000000' : 'red'; // Black or Red
+        const buttonTextColor = isLightBackground ? '#ffffff' : 'yellow'; // White or Yellow
+        const buttonHoverBgColor = isLightBackground ? '#cccccc' : 'yellow'; // Lighter grey or Yellow
+        const buttonHoverTextColor = isLightBackground ? '#000000' : 'red'; // Black or Red
+
+
+        root.style.setProperty('--button-bg-color', buttonBgColor);
+        root.style.setProperty('--button-text-color', buttonTextColor);
+        root.style.setProperty('--button-hover-bg-color', buttonHoverBgColor);
+        root.style.setProperty('--button-hover-text-color', buttonHoverTextColor);
+
+
+        // Special handling for inactive tabs to ensure visibility against new background
+        const inactiveTabBg = isLightBackground ? '#e0e0e0' : '#444'; // Lighter grey for light bg, darker for dark bg
+        document.querySelectorAll('.tab-btn:not(.active)').forEach(tab => {
+            tab.style.backgroundColor = inactiveTabBg;
+            tab.style.color = accentColor; // Inactive tab text uses accent color (e.g., black or red)
+        });
+
+        // Update active tab manually in case of re-render issues
+        const activeTab = document.querySelector('.tab-btn.active');
+        if (activeTab) {
+            activeTab.style.backgroundColor = getComputedStyle(root).getPropertyValue('--button-bg-color');
+            activeTab.style.color = getComputedStyle(root).getPropertyValue('--button-text-color');
+        }
+
+        // Apply input background color based on overall theme
+        // If background is light, inputs might be a very light grey to contrast.
+        // If background is dark, inputs remain black.
+        const inputBgColor = isLightBackground ? '#f0f0f0' : 'black';
+        document.querySelectorAll('input[type="text"], input[type="password"], input[type="date"], input[type="file"]').forEach(input => {
+            input.style.backgroundColor = inputBgColor;
+            input.style.color = textColor; // Input text color
+            input.style.borderColor = accentColor; // Input border color
+        });
+
+        // Adjust placeholder color for contrast
+        document.querySelectorAll('::placeholder').forEach(placeholder => {
+             // This is tricky as ::placeholder is a pseudo-element.
+             // We'll update the CSS rule directly via JavaScript.
+             // This might require a more robust solution if dynamic rules become complex.
+        });
+        // A better way to handle placeholder color for all inputs:
+        const styleSheet = document.styleSheets[0];
+        let placeholderRule = null;
+        for (let i = 0; i < styleSheet.cssRules.length; i++) {
+            if (styleSheet.cssRules[i].selectorText && styleSheet.cssRules[i].selectorText.includes('::placeholder')) {
+                placeholderRule = styleSheet.cssRules[i];
+                break;
+            }
+        }
+        if (placeholderRule) {
+            placeholderRule.style.color = secondaryAccentColor;
+        } else {
+            // If rule doesn't exist, create it (less common)
+            styleSheet.insertRule(`::placeholder { color: ${secondaryAccentColor}; }`, styleSheet.cssRules.length);
+        }
+    }
+
+
+    // --- Apply initial design settings on load ---
+    function applyDesignSettingsOnLoad() {
+        const savedColor = getBackgroundColor();
+        backgroundColorPicker.value = savedColor; // Update picker to current saved color
+        updateDynamicColors(savedColor); // Apply colors to body and buttons
+    }
+
+    // --- Authentication Flow Functions ---
     function showAuthForms() {
         registerForm.style.display = "block";
-        loginForm.style.display = "none"; // Default to register form
+        loginForm.style.display = "none";
         registerTabBtn.style.display = "block";
         loginTabBtn.style.display = "block";
         buttonsSection.style.display = "none";
         registerTabBtn.classList.add("active");
         loginTabBtn.classList.remove("active");
-        regDobLabel.style.display = 'block'; // Ensure DOB is visible when showing register
-        registerSubmitBtn.textContent = 'Зареєструватись'; // Reset button text
-        profileDisplay.style.display = 'none'; // Hide profile display
-        currentLoggedInUser = null; // Clear current user
+        regDobLabel.style.display = 'block';
+        registerSubmitBtn.textContent = 'Зареєструватись';
+        profileDisplay.style.display = 'none';
+        closeAllModals();
+        closeProfileEditorModal();
+        closeDesignSettingsModal();
+        // Ensure tabs pick up dynamic colors on form switch
+        const savedColor = getBackgroundColor();
+        updateDynamicColors(savedColor);
     }
 
-    // Function to show the main content and hide forms/tabs
     function showButtonsSection(username) {
         registerForm.style.display = "none";
         loginForm.style.display = "none";
         buttonsSection.style.display = "block";
         registerTabBtn.style.display = "none";
         loginTabBtn.style.display = "none";
+        profileDisplay.style.display = 'flex';
 
-        // Show and update profile display
-        if (username) {
-            currentLoggedInUser = username; // Set current user
+        const users = getUsers();
+        const user = users[username];
+
+        if (user) {
             profileUsernameSpan.textContent = username;
-            const users = getUsers();
-            const userData = users[username];
-            if (userData && userData.avatar) {
-                profileAvatarImg.src = userData.avatar;
-            } else {
-                profileAvatarImg.src = "https://via.placeholder.com/50/FFD700/000000?text=👤"; // Default avatar
-            }
-            profileDisplay.style.display = 'flex'; // Use flex to align avatar and text
+            profileAvatarImg.src = user.avatar || "https://via.placeholder.com/50/FFD700/000000?text=👤";
         } else {
-            profileDisplay.style.display = 'none';
+            profileUsernameSpan.textContent = "Unknown User";
+            profileAvatarImg.src = "https://via.placeholder.com/50/FFD700/000000?text=👤";
         }
+        closeAllModals();
+        closeProfileEditorModal();
+        closeDesignSettingsModal();
     }
 
-    // Check if user is already logged in on page load
     document.addEventListener('DOMContentLoaded', () => {
+        applyDesignSettingsOnLoad(); // Apply saved design settings immediately
         const loggedInUser = localStorage.getItem('loggedInUser');
         if (loggedInUser) {
             showButtonsSection(loggedInUser);
@@ -630,9 +860,12 @@
       loginForm.classList.add("hidden");
       registerTabBtn.classList.add("active");
       loginTabBtn.classList.remove("active");
-      regDobLabel.style.display = 'block'; // Show DOB when register tab is active
-      registerSubmitBtn.textContent = 'Зареєструватись'; // Change button text to Register
-      profileDisplay.style.display = 'none'; // Hide profile display
+      regDobLabel.style.display = 'block';
+      registerSubmitBtn.textContent = 'Зареєструватись';
+      profileDisplay.style.display = 'none';
+      // Re-apply colors to ensure active tab picks it up
+      const savedColor = getBackgroundColor();
+      updateDynamicColors(savedColor);
     };
 
     loginTabBtn.onclick = () => {
@@ -640,18 +873,13 @@
       registerForm.classList.add("hidden");
       loginTabBtn.classList.add("active");
       registerTabBtn.classList.remove("active");
-      regDobLabel.style.display = 'none'; // Hide DOB when login tab is active
-      registerSubmitBtn.textContent = 'Увійти'; // Change button text to Login
-      profileDisplay.style.display = 'none'; // Hide profile display
+      regDobLabel.style.display = 'none';
+      registerSubmitBtn.textContent = 'Увійти';
+      profileDisplay.style.display = 'none';
+      // Re-apply colors to ensure active tab picks it up
+      const savedColor = getBackgroundColor();
+      updateDynamicColors(savedColor);
     };
-
-    function getUsers() {
-      return JSON.parse(localStorage.getItem("users") || "{}");
-    }
-
-    function saveUsers(users) {
-      localStorage.setItem("users", JSON.stringify(users));
-    }
 
     registerForm.onsubmit = function(e) {
       e.preventDefault();
@@ -664,12 +892,12 @@
           alert("Такий логін вже існує");
           return;
       }
-      users[login] = { password, dob, avatar: "https://via.placeholder.com/50/FFD700/000000?text=👤" }; // Add default avatar
+      users[login] = { password: password, dob: dob, avatar: "https://via.placeholder.com/50/FFD700/000000?text=👤" };
       saveUsers(users);
       alert("Реєстрація пройшла успішно!");
       registerForm.reset();
-      localStorage.setItem('loggedInUser', login); // Store logged in username
-      showButtonsSection(login); // Show profile with new username
+      localStorage.setItem('loggedInUser', login);
+      showButtonsSection(login);
     };
 
     loginForm.onsubmit = function(e) {
@@ -684,38 +912,135 @@
       }
       if (users[login].password !== password) {
           alert("Невірний пароль");
-          // Add shake animation
           loginPasswordInput.classList.add('shake-animation');
-          // Remove animation class after it finishes
           loginPasswordInput.addEventListener('animationend', () => {
               loginPasswordInput.classList.remove('shake-animation');
-          }, { once: true }); // Ensure the event listener is removed after one use
+          }, { once: true });
           return;
       }
 
       alert(`Вхід виконано! Дата народження: ${users[login].dob}`);
       loginForm.reset();
-      localStorage.setItem('loggedInUser', login); // Store logged in username
-      showButtonsSection(login); // Show profile with logged in username
+      localStorage.setItem('loggedInUser', login);
+      showButtonsSection(login);
     };
 
-    // Logout functionality
     logoutBtn.onclick = () => {
-        localStorage.removeItem('loggedInUser'); // Clear logged in username
+        localStorage.removeItem('loggedInUser');
         alert("Ви успішно вийшли з системи.");
-        showAuthForms(); // Show the login/register forms again
+        showAuthForms();
     };
-
 
     document.querySelectorAll('.toggle-password').forEach(button => {
       button.addEventListener('click', () => {
         const input = button.previousElementSibling;
         input.type = input.type === "password" ? "text" : "password";
-        // Toggle 'visible-password' class to apply/remove the custom diagonal line
         button.classList.toggle('visible-password', input.type === "text");
       });
     });
 
+    // --- Profile Editor Logic ---
+    profileDisplay.onclick = () => {
+        openProfileEditorModal();
+    };
+
+    function openProfileEditorModal() {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (!loggedInUser) {
+            alert("Ви не увійшли. Будь ласка, увійдіть або зареєструйтесь.");
+            showAuthForms();
+            return;
+        }
+
+        const users = getUsers();
+        const currentUser = users[loggedInUser];
+
+        editLoginInput.value = loggedInUser;
+        editPasswordInput.value = '';
+        editAvatarPreview.src = currentUser.avatar || "https://via.placeholder.com/100/FFD700/000000?text=👤";
+
+        profileEditorModal.style.display = "flex";
+    }
+
+    function closeProfileEditorModal() {
+        profileEditorModal.style.display = "none";
+        editAvatarInput.value = '';
+    }
+
+    editAvatarInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                editAvatarPreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    saveProfileBtn.onclick = () => {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (!loggedInUser) return;
+
+        const users = getUsers();
+        const currentUserData = users[loggedInUser];
+
+        const newLogin = editLoginInput.value.trim();
+        const newPassword = editPasswordInput.value;
+
+        let actualLogin = loggedInUser;
+
+        if (newLogin !== loggedInUser) {
+            if (users[newLogin]) {
+                alert("Новий логін вже зайнятий. Будь ласка, оберіть інший.");
+                return;
+            }
+            users[newLogin] = { ...currentUserData, login: newLogin };
+            delete users[loggedInUser];
+            localStorage.setItem('loggedInUser', newLogin);
+            actualLogin = newLogin;
+        }
+
+        if (newPassword) {
+            users[actualLogin].password = newPassword;
+        }
+
+        // Update avatar if a new one was selected
+        if (editAvatarInput.files.length > 0) {
+            users[actualLogin].avatar = editAvatarPreview.src;
+        }
+
+
+        saveUsers(users);
+        alert("Профіль успішно оновлено!");
+        closeProfileEditorModal();
+        showButtonsSection(localStorage.getItem('loggedInUser'));
+    };
+
+    // --- Design Settings Logic ---
+    designSettingsBtnFooter.onclick = () => {
+        openDesignSettingsModal();
+    };
+
+    function openDesignSettingsModal() {
+        const savedColor = getBackgroundColor();
+        backgroundColorPicker.value = savedColor;
+        designSettingsModal.style.display = "flex";
+    }
+
+    function closeDesignSettingsModal() {
+        designSettingsModal.style.display = "none";
+    }
+
+    saveDesignBtn.onclick = () => {
+        const newColor = backgroundColorPicker.value;
+        saveBackgroundColor(newColor); // Save to localStorage
+        updateDynamicColors(newColor); // Apply colors to body and buttons
+        alert("Колір фону збережено!");
+        closeDesignSettingsModal();
+    };
+
+    // --- General Modal Functions ---
     function pulseButton(button) {
       button.classList.add('pulse');
       setTimeout(() => button.classList.remove('pulse'), 600);
@@ -748,105 +1073,20 @@
     }
 
     window.onclick = (event) => {
-      if ([socialModal, tiktokModal, twitchModal].includes(event.target)) {
+      if (event.target === socialModal || event.target === tiktokModal || event.target === twitchModal) {
         closeAllModals();
-        // Close profile editor modal if open
-        if (profileEditorModal.style.display === 'flex' && event.target === profileEditorModal) {
-          closeProfileEditorModal();
-        }
+      }
+      if (event.target === profileEditorModal) {
+        closeProfileEditorModal();
+      }
+      if (event.target === designSettingsModal) {
+        closeDesignSettingsModal();
       }
     };
 
     function closeModal() {
       socialModal.style.display = "none";
     }
-
-    // --- Profile Editor Functions ---
-
-    // Open profile editor
-    profileDisplay.addEventListener('click', openProfileEditorModal);
-
-    function openProfileEditorModal() {
-        if (!currentLoggedInUser) {
-            alert("Будь ласка, увійдіть або зареєструйтесь, щоб редагувати профіль.");
-            return;
-        }
-        const users = getUsers();
-        const userData = users[currentLoggedInUser];
-
-        if (userData) {
-            editLoginInput.value = currentLoggedInUser; // Current login
-            editPasswordInput.value = ''; // Clear password field for security
-            editProfileAvatarPreview.src = userData.avatar || "https://via.placeholder.com/100/FFD700/000000?text=👤";
-            profileEditorModal.style.display = 'flex';
-        } else {
-            alert("Сталася помилка. Дані користувача не знайдено.");
-        }
-    }
-
-    function closeProfileEditorModal() {
-        profileEditorModal.style.display = 'none';
-    }
-
-    // Handle avatar image selection
-    editAvatarInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                editProfileAvatarPreview.src = e.target.result; // Set preview
-            };
-            reader.readAsDataURL(file); // Read file as Data URL
-        }
-    });
-
-    // Save profile changes
-    function saveProfileChanges() {
-        if (!currentLoggedInUser) {
-            alert("Немає активного користувача для збереження змін.");
-            return;
-        }
-
-        const newLogin = editLoginInput.value.trim();
-        const newPassword = editPasswordInput.value;
-        const newAvatar = editProfileAvatarPreview.src; // Get Data URL from preview
-
-        const users = getUsers();
-        const oldUserData = users[currentLoggedInUser];
-
-        if (!oldUserData) {
-            alert("Сталася помилка. Дані старого користувача не знайдено.");
-            return;
-        }
-
-        // Validate new login (if changed)
-        if (newLogin !== currentLoggedInUser && users[newLogin]) {
-            alert("Новий логін вже зайнятий! Будь ласка, оберіть інший.");
-            return;
-        }
-
-        // If login changed, delete old user entry
-        if (newLogin !== currentLoggedInUser) {
-            delete users[currentLoggedInUser];
-            localStorage.removeItem('loggedInUser'); // Remove old loggedInUser
-        }
-
-        // Update user data (or create new entry if login changed)
-        users[newLogin] = {
-            dob: oldUserData.dob, // Keep existing DOB
-            password: newPassword ? newPassword : oldUserData.password, // Update password if provided
-            avatar: newAvatar // Save new avatar Data URL
-        };
-
-        saveUsers(users);
-        localStorage.setItem('loggedInUser', newLogin); // Set new loggedInUser
-        currentLoggedInUser = newLogin; // Update current user in JS
-
-        alert("Зміни профілю успішно збережено!");
-        closeProfileEditorModal();
-        showButtonsSection(currentLoggedInUser); // Refresh profile display
-    }
-
   </script>
 </body>
 </html>
