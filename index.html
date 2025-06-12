@@ -597,15 +597,15 @@
         <input type="password" id="editPassword" placeholder="Введіть новий пароль" />
       </label>
 
-      <button id="saveProfileBtn">Зберегти зміни</button>
+      <button id="saveProfileBtn">Зберегти змінення</button>
     </div>
   </div>
 
   <div id="designSettingsModal" class="modal">
     <div class="design-settings-content">
-      <button class="close-btn" onclick="closeDesignSettingsModal()">&times;</button>
-      <h2>Налаштування дизайну</h2>
-      <label>Виберіть колір фону:
+      
+      <h2>Колір сайту</h2>
+      <label>Виберіть колір сайту:
         <input type="color" id="backgroundColorPicker" value="#333333">
       </label>
       <button id="saveDesignBtn">Зберегти колір</button>
@@ -614,7 +614,7 @@
 
   <div id="socialModal" class="modal">
     <div class="modal-content">
-      <button class="close-btn" onclick="closeModal()">&times;</button>
+      
       <h2>Обери платформу</h2>
       <button onclick="showTiktok()">TikTok</button>
       <button onclick="showTwitch()">Twitch</button>
@@ -623,26 +623,28 @@
 
   <div id="tiktokModal" class="modal">
     <div class="modal-content">
-      <button class="close-btn" onclick="closeAllModals()">&times;</button>
+     
       <h2>TikTok Профілі</h2>
+      <button onclick="window.open('https://www.tiktok.com/@senku_dzen', '_blank')">TikTok Олега</button>
       <button onclick="window.open('https://www.tiktok.com/@_arturio_kato_', '_blank')">TikTok Артура</button>
       <button onclick="window.open('https://www.tiktok.com/@_miya_kato', '_blank')">TikTok Мії</button>
+      <button onclick="window.open('https://www.tiktok.com/@maloletkagta5', '_blank')">TikTok Глеба</button>
     </div>
   </div>
 
   <div id="twitchModal" class="modal">
     <div class="modal-content">
-      <button class="close-btn" onclick="closeAllModals()">&times;</button>
+    
       <h2>Twitch Профілі</h2>
-      <a href="https://www.twitch.tv/tokarrr27" target="_blank" rel="noopener noreferrer">Максім (tokarrr27)</a>
-      <a href="https://www.twitch.tv/miya_kato" target="_blank" rel="noopener noreferrer">Мія (miya_kato)</a>
-      <a href="https://www.twitch.tv/maloletkagta5" target="_blank" rel="noopener noreferrer">Глеб (maloletkagta5)</a>
+      <a href="https://www.twitch.tv/tokarrr27" target="_blank" rel="noopener noreferrer">Твіч Максіма </a>
+      <a href="https://www.twitch.tv/miya_kato" target="_blank" rel="noopener noreferrer">Твіч Мії </a>
+      <a href="https://www.twitch.tv/maloletkagta5" target="_blank" rel="noopener noreferrer">Твіч Глеба </a>
     </div>
   </div>
 
   <div class="footer-note">
     Створено від Артура — <a href="email:sartgameover@gmail.com">sartgameover@gmail.com</a>
-    <button id="designSettingsBtnFooter">Налаштування дизайну</button>
+    <button id="designSettingsBtnFooter">Колір сайту</button>
   </div>
 
   <script>
